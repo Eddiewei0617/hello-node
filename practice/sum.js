@@ -9,6 +9,9 @@ function sum(param){
     return ans;
 } ;
 // sum(10)
+
 console.log(sum(3)); 
 console.log(sum(6)); 
-console.log(sum(10));
+console.log(sum(10)); 
+console.log(sum(100));
+
