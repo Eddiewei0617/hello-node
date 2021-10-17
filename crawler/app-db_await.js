@@ -8,7 +8,7 @@ const connection = mysql.createConnection({
   host: "localhost",
   //port     :  "3306"   mysql預設富號通常是3306
   user: "Eddie",
-  password: "???",
+  password: "????",
   database: "stock_mfee20",
 });
 
