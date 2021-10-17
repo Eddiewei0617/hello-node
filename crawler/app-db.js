@@ -6,32 +6,24 @@ const mysql = require("mysql");
 
 const connection = mysql.createConnection({
   host: "localhost",
-  //port     :  "3306"   mysql預設富號通常是3306
+  //port     :  "3306"   mysql預設埠號通常是3306
   user: "Eddie",
-  password: "????",
+  password: "j70808064",
   database: "stock_mfee20",
 });
 
 connection.connect();
 
-// 用一個function 把要insert的資料用promise包起來
-function insertPromise(insertData) {
-  return new Promise((resolve, reject) => {
-    connection.query(
-      "INSERT IGNORE INTO stock (stock_no, date, share_amount, deal_price, transaction_number) VALUES (?,?,?,?,?);",
-      insertData,
-      (err, results) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve("成功引入", results);
-        }
-      }
-    );
-  });
-}
+// connection.query('SELECT * FROM stock', function (error, results) {
+//   if (error) {
+//   console.error("資料庫錯誤", error);
+//   // 通常error是物件，如果用+而不是,會出現[object, Object]看不到是甚麼錯誤
+//   }else{
+//       console.log(results);
+//   }
+// });
+// connection.end();
 
-// 以await的方式確實插入資料庫
 async function crawlerAwait() {
   let format = "json";
   let date = moment().format("YYYYMMDD");
@@ -53,18 +45,20 @@ async function crawlerAwait() {
     );
     // console.log(res.data);
     let firstItem = res.data.data[0];
-    // console.log(firstItem);
-
-    let insertData = [
-      stockCode,
-      firstItem[0],
-      firstItem[1],
-      firstItem[2],
-      firstItem[8],
-    ];
-
-    let result = await insertPromise(insertData);
-    console.log(result);
+    console.log(firstItem);
+    // 0, 1, 2, 8項是我們要的資料
+    connection.query(
+      //加了IGNORE會讓你在每次insert不同資料時不會出現重複insert的問題
+      "INSERT IGNORE INTO stock (stock_no, date, share_amount, deal_price, transaction_number) VALUES (?,?,?,?,?);",
+      [stockCode, firstItem[0], firstItem[1], firstItem[2], firstItem[8]],
+      (err, results) => {
+        if (err) {
+          console.error("資料庫錯誤", err);
+        } else {
+          console.log("db結果", results);
+        }
+      }
+    );
   } catch (err) {
     console.error(err);
   } finally {
