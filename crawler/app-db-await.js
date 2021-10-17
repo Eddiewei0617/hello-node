@@ -36,37 +36,45 @@ function insertPromise(insertData) {
 // 以await的方式確實插入資料庫
 async function crawlerAwait() {
   let format = "json";
-  let date = moment().format("YYYYMMDD");
+  let date = moment().format("YYYYMMDD hh:mm:ss");
+  console.log(date);
   // let stockCode = "2330";
   try {
-    let stockCode = await fs.readFile("stock.txt", "utf-8");
+    // 抓檔案裡的股票代號
+    // let stockCode = await fs.readFile("stock.txt", "utf-8");
     // console.log("stockCode", stockCode);
-    // 如果想呈現多個，可用split再跑for迴圈
 
-    let res = await axios.get(
-      "https://www.twse.com.tw/exchangeReport/STOCK_DAY?",
-      {
-        params: {
-          response: format,
-          date: date,
-          stockNo: stockCode,
-        },
-      }
-    );
-    // console.log(res.data);
-    let firstItem = res.data.data[0];
-    console.log(firstItem);
+    // 如果想呈現多個，可用split再跑for迴圈，split會把字串切成陣列，如下:
+    let stockCode = await (await fs.readFile("stock.txt", "utf-8")).split(",");
+    for (let i = 0; i < stockCode.length; i++) {
+      //   console.log(stockCode.length);
+      console.log(stockCode[i]);
+      // 抓爬蟲
+      let res = await axios.get(
+        "https://www.twse.com.tw/exchangeReport/STOCK_DAY?",
+        {
+          params: {
+            response: format,
+            date: date,
+            stockNo: stockCode[i],
+          },
+        }
+      );
+      // console.log(res.data);
+      let firstItem = res.data.data[0];
+      // console.log(firstItem);
 
-    let insertData = [
-      stockCode,
-      firstItem[0],
-      firstItem[1],
-      firstItem[2],
-      firstItem[8],
-    ];
+      let insertData = [
+        stockCode[i],
+        firstItem[0],
+        firstItem[1],
+        firstItem[2],
+        firstItem[8],
+      ];
 
-    let result = await insertPromise(insertData);
-    console.log(result);
+      let result = await insertPromise(insertData);
+      console.log(result);
+    }
   } catch (err) {
     console.error(err);
   } finally {
