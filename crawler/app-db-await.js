@@ -26,7 +26,7 @@ function insertPromise(insertData) {
         if (err) {
           reject(err);
         } else {
-          resolve("成功引入", results);
+          resolve(results);
         }
       }
     );
@@ -60,9 +60,9 @@ async function crawlerAwait() {
           },
         }
       );
-      // console.log(res.data);
+      console.log(res.data);
       let firstItem = res.data.data[0];
-      // console.log(firstItem);
+      console.log(firstItem);
 
       let insertData = [
         stockCode[i],
