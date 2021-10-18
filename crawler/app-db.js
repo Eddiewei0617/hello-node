@@ -3,13 +3,14 @@ const axios = require("axios");
 const moment = require("moment");
 const fs = require("fs/promises");
 const mysql = require("mysql");
+require("dotenv").config();
 
 const connection = mysql.createConnection({
-  host: "localhost",
-  //port     :  "3306"   mysql預設埠號通常是3306
-  user: "Eddie",
-  password: "j70808064",
-  database: "stock_mfee20",
+  host: process.env.DB_HOST,
+  //port:"3306"     //mysql預設埠號通常是3306
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
 });
 
 connection.connect();
