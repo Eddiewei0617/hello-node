@@ -1,22 +1,49 @@
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faPen, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import EditBtn from "./buttons/EditBtn";
 import DeleteBtn from "./buttons/DeleteBtn";
+import axios from "axios";
+import loading from "../../images/loading.gif";
+import { STATUS_WORD, STATUS_COLOR } from "../../configs/status";
 
 const TodoList = () => {
+  const { todoId } = useParams(); // useParams() 可以取得網址裡的參數，通常是id的部分
+  // console.log("todoId", todoId);
+  const [item, setItem] = useState(null);
+
+  useEffect(async () => {
+    let res = await axios.get(`http://localhost:3001/api/todos/${todoId}`);
+    // console.log(res.data);  // 有抓到單一筆商品的物件資料
+    setItem(res.data);
+  }, []);
+
+  if (item === null) {
+    return (
+      <>
+        載入中...
+        <img src={loading} alt="Loading data" />
+      </>
+    );
+  }
+
   return (
     <>
       <div className="column is-three-fifths">
-        <article className="panel">
-          <p className="panel-heading">TODO: 標題</p>
+        <article className={`panel ${STATUS_COLOR[item.status]}`}>
+          <p className="panel-heading">
+            ${STATUS_WORD[item.status]}
+            {item.title}
+          </p>
           <div className="card-image">
             <figure className="image is-4by3">
               <img src="#" alt="Placeholder image" />
             </figure>
           </div>
-          <div className="panel-block">TODO: 內容</div>
+          <div className="panel-block">{item.content}</div>
           <ul>
-            <li className="panel-block">到期日: TODO: 到期日</li>
+            <li className="panel-block">到期日: {item.deadline}</li>
             <li className="panel-block">ＸＸＸ 於 YYYY-MM-DD 建立</li>
             <li className="panel-block">ＯＯＯ 於 YYYY-MM-DD 更新</li>
           </ul>
