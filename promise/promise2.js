@@ -8,7 +8,7 @@
 
 let doWork = function (job, timer, isOK) {
     // 物件 new Promise(...) --> 建立一個 Promise 物件
-    // 建構式(Promise) 必須要傳一個一個函式 executer 執行者
+    // 建構式(Promise) 必須要傳一個一個函式 executer 執行者。new Promise(執行者)，執行者也只是一個函式，會要求傳入兩個參數: (resovle, reject)
     // executor(處理成功 resolve, 處理失敗 reject)
     return new Promise((resolve, reject) => {
       setTimeout(() => {
@@ -33,7 +33,7 @@ let doWork = function (job, timer, isOK) {
   
   // 刷牙(3000) --> 吃早餐(5000) --> 寫功課(3000)
   // promise chain
-  // ture對應到上面的 isOK，代表是成功的
+  // true對應到上面的 isOK，代表是成功的
   doWork("刷牙", 3000, true)
     .then((data) => {
       // fulfilled 時執行 <---> resolve
