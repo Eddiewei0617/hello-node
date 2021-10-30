@@ -4,6 +4,7 @@ const fs = require("fs");
 function readFilePromise (){
     return new Promise((resolve, reject) =>{
         fs.readFile("input.txt", "utf-8", (err, data) => {
+            // (err, data) => err一定要放前面
             if (err){
                 reject(err)
                 // console.error("發生錯誤囉", err);
