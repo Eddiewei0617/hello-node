@@ -1,0 +1,8 @@
+extends _layouts/master
+
+block content
+  h1 這是首頁
+  h2 hi #{name} 是一個 #{job}
+  ul 
+    each city in cities
+      li #{city}

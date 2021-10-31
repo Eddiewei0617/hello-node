@@ -1,8 +1,14 @@
 // express 是 nodejs 的框架
 const express = require("express");
+const path = require("path");
 require("dotenv").config();
 const mysql = require("mysql");
 const Promise = require("bluebird");
+let app = express(); // application
+
+// cors
+const cors = require("cors");
+app.use(cors());
 
 let connection = mysql.createConnection({
   host: process.env.DB_HOST, // 本機 127.0.0.1
@@ -15,12 +21,10 @@ let connection = mysql.createConnection({
 // 利用 bluebird 把 connection 的函式都變成 promise
 connection = Promise.promisifyAll(connection);
 
-let app = express(); // application
-
 // 準備取得todos的API
 app.get("/api/todos", async (req, res) => {
   let data = await connection.queryAsync("SELECT * FROM todos");
-  res.json(data);
+  res.json(data); // 以json格式取得資料庫的資料內容
 });
 
 // app.use 告訴 express 這裡有一個中間件(middleware)
@@ -47,12 +51,25 @@ app.use((req, res, next) => {
 app.use("/static", express.static("static"));
 // http://localhost:3001/static/about.html  --> 直接打那個資料夾裡面的檔名就好
 
+// app.set 設定這個 application 的一些變數
+// views: 告訴 app view 的檔案夾是哪一個
+// view engine: 告訴 app 你用哪一種 view engine
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "pug");
+
 // 路由 router / route --> 其實也算是一種中間件
 // app.Method(Path, Handler)
 // Method: GET, POST, PUT, DELETE, PATCH,...
 // Handler 是一個函式，會有兩個參數 request, response
 app.get("/", (req, res) => {
-  res.send("我是Express首頁");
+  // res.send("我是Express首頁");
+  // 告訴 express 這個路由要用的樣板檔案是哪一個
+  let data = {
+    name: "ashley",
+    job: "engineer",
+    cities: ["Taipei", "YiLan"],
+  };
+  res.render("index", data);
 });
 
 // 假如同時進到 /member 網址頁面，沒有next()的話，就不會進到"我是會員頁 2"這一part
