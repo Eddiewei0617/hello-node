@@ -48,7 +48,7 @@ const TodoList = () => {
               <div>到期日期: {item.deadline}</div>
             </div>
             <footer className="card-footer">
-              <ShowBtn />
+              <ShowBtn itemId={item.id} />
               <a href="#" className="card-footer-item">
                 <FontAwesomeIcon icon={faCheck} className="mr-2" />
                 Done
