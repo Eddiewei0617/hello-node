@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUpload } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
+// import { API_URL } from "../configs/config";
 
 const Register = () => {
   const [member, setMember] = useState({
@@ -11,9 +12,31 @@ const Register = () => {
     confirmPassword: "123123",
     photo: null,
   });
+
+  // 設定一個onChange事件函式，讓下方所有的input都可以使用
+  function handleChange(e) {
+    let newMember = { ...member };
+    newMember[e.target.name] = e.target.value;
+    setMember(newMember);
+  }
+
+  // 表單送出時用api把資料傳到後端
+  async function handleSubmit(e) {
+    e.preventDefault();
+    try {
+      let res = await axios.post(
+        `http://localhost:3001/api/auth/register`,
+        member
+      );
+      // console.log("API_URL", API_URL);
+    } catch (e) {
+      console.log("handleSubmit", e);
+    }
+  }
+
   return (
     <div className="column is-three-fifths">
-      <form className="box">
+      <form className="box" onSubmit={handleSubmit}>
         <div className="field">
           <label className="label">帳號</label>
           <div className="control">
@@ -22,11 +45,7 @@ const Register = () => {
               className="input"
               type="email"
               value={member.email}
-              onChange={(e) => {
-                let newMember = { ...member };
-                newMember.email = e.target.value;
-                setMember(newMember);
-              }}
+              onChange={handleChange}
             />
           </div>
         </div>
@@ -38,6 +57,7 @@ const Register = () => {
               className="input"
               type="password"
               value={member.password}
+              onChange={handleChange}
             />
           </div>
         </div>
@@ -49,6 +69,7 @@ const Register = () => {
               className="input"
               type="password"
               value={member.confirmPassword}
+              onChange={handleChange}
             />
           </div>
         </div>
@@ -60,6 +81,7 @@ const Register = () => {
               className="input"
               type="text"
               value={member.name}
+              onChange={handleChange}
             />
           </div>
         </div>

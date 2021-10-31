@@ -1,17 +1,31 @@
-const express = Require("express");
+const express = require("express");
 const router = express.Router();
-// 子站的感覺
+// 子站的感覺，不要把所有東西擠在server.js寫，分流(router)出來
+const mysql = require("mysql");
+const Promise = require("bluebird");
+require("dotenv").config();
+
+let connection = mysql.createConnection({
+  host: process.env.DB_HOST, // 本機 127.0.0.1
+  port: process.env.DB_PORT, // 埠號 mysql 預設就是 3306
+  user: process.env.DB_USER,
+  password: process.env.DB_PWD,
+  database: process.env.DB_NAME,
+});
+
+// 利用 bluebird 把 connection 的函式都變成 promise
+connection = Promise.promisifyAll(connection);
 
 // 準備取得todos的API
 // 列表：全部資料
-app.get("/api/todos", async (req, res) => {
+router.get("/", async (req, res) => {
   let data = await connection.queryAsync("SELECT * FROM todos");
   res.json(data); // 以json格式取得資料庫的資料內容
 });
 
 // /api/todos/24 。 24是指id:24的商品
 // 根據 id 取得單筆資料
-app.get("/api/todos/:todoId", async (req, res) => {
+router.get("/:todoId", async (req, res) => {
   // req.params.todoId --> req裡面的params功能會顯示出todoId的物件，我們再把它取出即可
   let data = await connection.queryAsync("SELECT * FROM todos WHERE id=?;", [
     req.params.todoId,

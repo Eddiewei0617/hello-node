@@ -2,33 +2,21 @@
 const express = require("express");
 const path = require("path");
 require("dotenv").config();
-const mysql = require("mysql");
-const Promise = require("bluebird");
+
 let app = express(); // application
 
 // cors
 const cors = require("cors");
+const { API_URL } = require("../todos-fe/src/configs/config");
 // let corsOptions = {
 //   origin: "*", // 全部
 // };
 app.use(cors());
 
-let connection = mysql.createConnection({
-  host: process.env.DB_HOST, // 本機 127.0.0.1
-  port: process.env.DB_PORT, // 埠號 mysql 預設就是 3306
-  user: process.env.DB_USER,
-  password: process.env.DB_PWD,
-  database: process.env.DB_NAME,
-});
-
-// 利用 bluebird 把 connection 的函式都變成 promise
-connection = Promise.promisifyAll(connection);
-
-// 準備取得todos的API
-app.get("/api/todos", async (req, res) => {
-  let data = await connection.queryAsync("SELECT * FROM todos");
-  res.json(data); // 以json格式取得資料庫的資料內容
-});
+// 要拿到前端註冊時的物件資料，需使用中間件，才可以讀到body的資料
+app.use(express.urlencoded({ extended: true }));
+// 使用此中間件才能解析的到json格式
+app.use(express.json());
 
 // app.use 告訴 express 這裡有一個中間件(middleware)
 // middleware 只是一個函式，會有三個參數
@@ -48,17 +36,6 @@ app.use((req, res, next) => {
   next();
   // 低耦合
 });
-
-// app.use(PATH, express.static(檔案夾))
-// express.static("檔案資料夾名稱")是內建的中間件
-app.use("/static", express.static("static"));
-// http://localhost:3001/static/about.html  --> 直接打那個資料夾裡面的檔名就好
-
-// app.set 設定這個 application 的一些變數
-// views: 告訴 app view 的檔案夾是哪一個
-// view engine: 告訴 app 你用哪一種 view engine
-app.set("views", path.join(__dirname, "views"));
-app.set("view engine", "pug");
 
 // 路由 router / route --> 其實也算是一種中間件
 // app.Method(Path, Handler)
@@ -85,14 +62,6 @@ app.get("/member", (req, res) => {
   res.send("我是會員頁2");
 });
 
-app.get("/product", (req, res) => {
-  res.send("來到了商品頁");
-});
-
-app.get("/cart", (req, res) => {
-  res.send("來到了購物車");
-});
-
 app.get("/api/test", (req, res) => {
   res.json({
     name: "ashley",
@@ -102,7 +71,13 @@ app.get("/api/test", (req, res) => {
 
 //-----------------------------------------------
 
-//--------------------------------------------
+// 原本這裡有 /api/todos 的相關路由
+// 為了做router分流，產生一個中間件以做串接，比對"/api/todos"後進入".routers/todos"檔案繼續去比對
+let todosRouter = require("./routers/todos");
+app.use("/api/todos", todosRouter);
+
+let authRouter = require("./routers/auth");
+app.use("/api/auth", authRouter);
 
 // 職責切割 :
 // 這個中間件是負責做紀錄
@@ -120,6 +95,6 @@ app.use((req, res, next) => {
 
 // 3001 port
 app.listen(3001, () => {
-  connection.connect();
+  // connection.connect();
   console.log("express app 啟動了喔");
 });

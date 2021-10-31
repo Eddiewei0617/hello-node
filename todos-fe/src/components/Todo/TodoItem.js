@@ -7,6 +7,7 @@ import DeleteBtn from "./buttons/DeleteBtn";
 import axios from "axios";
 import loading from "../../images/loading.gif";
 import { STATUS_WORD, STATUS_COLOR } from "../../configs/status";
+// import { API_URL } from "../../configs/config";
 
 const TodoList = () => {
   const { todoId } = useParams(); // useParams() 可以取得網址裡的參數，通常是id的部分
