@@ -79,12 +79,13 @@ async function crawlerAwait() {
         firstItem[2],
         firstItem[8]
       );
-      console.log("bluebird promise", result);      
-      }  
+      console.log("bluebird promise", result);
+    }
   } catch (err) {
     console.error(err);
   } finally {
     connection.end();
   }
 
-crawlerAwait();
+  crawlerAwait();
+}
