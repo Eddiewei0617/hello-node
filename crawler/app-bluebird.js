@@ -24,21 +24,21 @@ connection = Promise.promisifyAll(connection);
 connection.connectAsync();
 
 // 用一個function 把要insert的資料用promise包起來
-function insertPromise(insertData) {
-  return new Promise((resolve, reject) => {
-    connection.query(
-      "INSERT IGNORE INTO stock (stock_no, date, share_amount, deal_price, transaction_number) VALUES (?,?,?,?,?);",
-      insertData,
-      (err, results) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(results);
-        }
-      }
-    );
-  });
-}
+// function insertPromise(insertData) {
+//   return new Promise((resolve, reject) => {
+//     connection.query(
+//       "INSERT IGNORE INTO stock (stock_no, date, share_amount, deal_price, transaction_number) VALUES (?,?,?,?,?);",
+//       insertData,
+//       (err, results) => {
+//         if (err) {
+//           reject(err);
+//         } else {
+//           resolve(results);
+//         }
+//       }
+//     );
+//   });
+// }
 
 // 以await的方式確實插入資料庫
 async function crawlerAwait() {
@@ -52,7 +52,7 @@ async function crawlerAwait() {
     // console.log("stockCode", stockCode);
 
     // 如果想呈現多個，可用split再跑for迴圈，split會把字串切成陣列，如下:
-    let stockCode = await (await fs.readFile("stock.txt", "utf-8")).split(",");
+    let stockCode = (await fs.readFile("stock.txt", "utf-8")).split(",");
     for (let i = 0; i < stockCode.length; i++) {
       //   console.log(stockCode.length);
       console.log(stockCode[i]);
@@ -86,6 +86,5 @@ async function crawlerAwait() {
   } finally {
     connection.end();
   }
-
-  crawlerAwait();
 }
+crawlerAwait();

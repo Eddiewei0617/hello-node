@@ -16,6 +16,8 @@ const movieCrawler = () => {
       const data = [];
       const $ = cheerio.load(body); //載入body，以便讀取html標籤
       const list = $(".release_list .release_info"); // 用一個list先寫好欲抓取表格的共同class name
+      // [特別記住]!!!! 一定要一層一層找，下面的find也是一樣!!!!!!!!!!
+      console.log("check", list);
       for (let i = 0; i < list.length; i++) {
         const name = list
           .eq(i)
@@ -28,7 +30,7 @@ const movieCrawler = () => {
 
         data.push({ name, time });
       }
-      console.log(data[1].name);
+      // console.log(data[1].name);
     }
   );
 };
