@@ -7,7 +7,6 @@ let app = express(); // application
 
 // cors
 const cors = require("cors");
-const { API_URL } = require("../todos-fe/src/configs/config");
 // let corsOptions = {
 //   origin: "*", // 全部
 // };

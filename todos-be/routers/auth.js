@@ -14,7 +14,7 @@ const registerRules = [
 ];
 
 // 整個是長這樣 : /api/auth/register
-router.post("/register", registerRules, async(req, res) => {
+router.post("/register", registerRules, async (req, res) => {
   //   console.log("req.body", req.body);
   //   req.body {
   //   email: 'junnywei15@gmail.com',
@@ -38,18 +38,21 @@ router.post("/register", registerRules, async(req, res) => {
 
   //  TODO: 是否已註冊
   // 比對從前端傳進來的email(req.body.email)，如果我們後端的資料庫裡members資料有此email了，就回傳一個json格式說明錯誤
-  try{
-    let member = await RTCPeerConnection.queryAsync("SELECT * FROM members WHERE email=?", req.body.email);
-    if (member.length>0){
-      return res.josn({code:"1101", message:"該email已註冊"})
+  try {
+    let member = await RTCPeerConnection.queryAsync(
+      "SELECT * FROM members WHERE email=?",
+      req.body.email
+    );
+    if (member.length > 0) {
+      return res.josn({ code: "1101", message: "該email已註冊" });
     }
+  } catch (e) {
+    //  TODO: 密碼加密
+
+    //  TODO: 建立一筆資料
+
+    res.json({ result: "no OKOK" });
   }
-
-  //  TODO: 密碼加密
-
-  //  TODO: 建立一筆資料
-
-  res.json({ result: "OKOK" });
 });
 
 module.exports = router;

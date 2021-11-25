@@ -6,13 +6,14 @@ import ShowBtn from "./buttons/ShowBtn";
 import DeleteBtn from "./buttons/DeleteBtn";
 import axios from "axios";
 import { STATUS_WORD, STATUS_COLOR } from "../../configs/status";
-// import { API_URL } from "../../configs/config";
+import { API_URL } from "../../configs/config";
+//console.log(API_URL);
 
 const TodoList = () => {
   const [todos, setTodos] = useState([]);
 
   useEffect(async () => {
-    let res = await axios.get(`http://localhost:3001/api/todos`);
+    let res = await axios.get(`${API_URL}/todos`);
     setTodos(res.data);
     // 這裡的data是在後端server.js我們取得資料庫的資料時取名叫做data的
   }, []);
