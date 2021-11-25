@@ -6,7 +6,7 @@ const mysql = require("mysql");
 require("dotenv").config();
 const Promise = require("bluebird");
 
-const connection = mysql.createConnection({
+let connection = mysql.createConnection({
   // 上面引用了第三方套件dotenv是可以避免資料庫密碼在上傳時被駭，使用的語法是: process.env.XXXX
   host: process.env.DB_HOST,
   //port:"3306"     //mysql預設埠號通常是3306
