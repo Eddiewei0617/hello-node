@@ -7,7 +7,7 @@ import DeleteBtn from "./buttons/DeleteBtn";
 import axios from "axios";
 import loading from "../../images/loading.gif";
 import { STATUS_WORD, STATUS_COLOR } from "../../configs/status";
-// import { API_URL } from "../../configs/config";
+import { API_URL } from "../../configs/config";
 
 const TodoList = () => {
   const { todoId } = useParams(); // useParams() 可以取得網址裡的參數，通常是id的部分
@@ -15,7 +15,7 @@ const TodoList = () => {
   const [item, setItem] = useState(null);
 
   useEffect(async () => {
-    let res = await axios.get(`http://localhost:3001/api/todos/${todoId}`);
+    let res = await axios.get(`${API_URL}/todos/${todoId}`);
     // console.log(res.data);  // 有抓到單一筆商品的物件資料
     setItem(res.data);
   }, []);

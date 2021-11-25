@@ -7,7 +7,10 @@ import DeleteBtn from "./buttons/DeleteBtn";
 import axios from "axios";
 import { STATUS_WORD, STATUS_COLOR } from "../../configs/status";
 import { API_URL } from "../../configs/config";
+<<<<<<< HEAD
 //console.log(API_URL);
+=======
+>>>>>>> 584175ef73c26dc1644f5aceb1611ee6a1366a59
 
 const TodoList = () => {
   const [todos, setTodos] = useState([]);

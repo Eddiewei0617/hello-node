@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUpload } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
-// import { API_URL } from "../configs/config";
+import { API_URL } from "../configs/config";
 
 const Register = () => {
   const [member, setMember] = useState({
@@ -24,10 +24,7 @@ const Register = () => {
   async function handleSubmit(e) {
     e.preventDefault();
     try {
-      let res = await axios.post(
-        `http://localhost:3001/api/auth/register`,
-        member
-      );
+      let res = await axios.post(`${API_URL}/auth/register`, member);
       // console.log("API_URL", API_URL);
     } catch (e) {
       console.log("handleSubmit", e);
